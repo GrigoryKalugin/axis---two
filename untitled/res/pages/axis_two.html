@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>?+?=?</title>
+    <style type="text/css">
+        .equal {
+                font-size: 180%;
+                font-family: Verdana, Arial, Helvetica, sans-serif;
+                color: #336;
+                position: absolute;
+                z-index: -1;
+        }
+        .variable {
+                position: absolute;
+                z-index: -1;
+        }
+        .inputs {
+                width: 10px;
+                position: absolute;
+                left: 0;
+                top: 0;
+                z-index: 1;
+        }
+    </style>
+</head>
+<body>
+    // Объявление инпутов и текстовых полей
+    <input id="firstInput"
+           class="inputs"
+           maxlength="1"
+           value=""
+           oninput="firstStep()">
+    <input id="secondInput"
+           class="inputs"
+           maxlength="1"
+           value=""
+           oninput="secondStep()"
+           hidden>
+    <div class="variable" id="firstInputSucc" hidden> A </div>
+    <div class="variable" id="secondInputSucc" hidden> B </div>
+
+    <div class="equal" id="firstSum" > A </div>
+    <div class="equal" id="plusSum"> + </div>
+    <div class="equal" id="lastSum"> B </div>
+    <div class="equal" id="equalSum"> = </div>
+    <div class="equal" id="answerSum"> ?? </div>
+    <input class="equal"
+           id="answerInput"
+           maxlength="2"
+           value=""
+           oninput="answerStep()"
+           style="width: 40px;
+                position: absolute;
+                z-index: 1;"
+            hidden>
+
+    <canvas id="myCanvas"
+            width="900"
+            height="500"
+            style="z-index: 0;">
+        Ваш браузер не поддерживает Canvas
+    </canvas>
+
+    <script>
+        // генерирация членов суммы
+        Abeg = 6;
+        Aend = 9;
+        A = Math.floor(Math.random() * ((Aend + 1) - Abeg)) + (Abeg);
+        Answerbeg = 11;
+        Answerend = 14;
+        Answer = Math.floor(Math.random() * ((Answerend + 1) - Answerbeg)) + (Answerbeg);
+        B = Answer - A;
+        // начало отсчера
+        XConst = 35;
+        YConst = 250;
+
+        var canvas = document.getElementById("myCanvas"),
+            context = canvas.getContext("2d");
+
+        // отрисовка изображения
+        var img = new Image();
+        img.src = '../img/sprite.png';
+        imgW = 895;
+        imgH = 83;
+        context.drawImage(img, 0, YConst - 40, imgW, imgH);
+
+        // размещение элементов выражения
+        document.getElementById("firstSum").style.left = (imgW / 2) - 45 + 'px';
+        document.getElementById("firstSum").textContent = A;
+        document.getElementById("plusSum").style.left = (imgW / 2) - 25 + 'px';
+        document.getElementById("lastSum").style.left = (imgW / 2) + 'px';
+        document.getElementById("lastSum").textContent = B;
+        document.getElementById("equalSum").style.left = (imgW / 2) + 25 + 'px';
+        document.getElementById("answerSum").style.left = (imgW / 2) + 50 + 'px';
+        document.getElementById("answerInput").style.left = (imgW / 2) + 50 + 'px';
+        document.getElementById("answerInput").style.top = 5 + 'px';
+
+        // начало работы
+        XConst = parable(A, "firstInput");
+
+        // определение первого члена
+        function firstStep () {
+            var Value = parseInt(document.getElementById("firstInput").value, 10);
+            if (Value == A) {
+                parable(B, "secondInput");
+                document.getElementById("firstSum").style.backgroundColor = "";
+                document.getElementById("secondInput").hidden = false;
+                document.getElementById("firstInput").hidden = true;
+                document.getElementById("firstInputSucc").hidden = false;
+                document.getElementById("firstInputSucc").textContent = document.getElementById("firstInput").value;
+                document.getElementById("firstInputSucc").style.left = document.getElementById("firstInput").style.left;
+                document.getElementById("firstInputSucc").style.top = document.getElementById("firstInput").style.top;
+            } else {
+                document.getElementById("firstSum").style.backgroundColor = "orange";
+                document.getElementById("firstInput").style.color = "red";
+            }
+        }
+
+        // определение второго члена
+        function secondStep () {
+            var Value = parseInt(document.getElementById("secondInput").value, 10);
+            if (Value == B) {
+                document.getElementById("lastSum").style.backgroundColor = "";
+                document.getElementById("answerSum").hidden = true;
+                document.getElementById("secondInput").hidden = true;
+                document.getElementById("answerInput").hidden = false;
+                document.getElementById("secondInputSucc").hidden = false;
+                document.getElementById("secondInputSucc").textContent = document.getElementById("secondInput").value;
+                document.getElementById("secondInputSucc").style.left = document.getElementById("secondInput").style.left;
+                document.getElementById("secondInputSucc").style.top = document.getElementById("secondInput").style.top;
+            } else {
+                document.getElementById("lastSum").style.backgroundColor = "orange";
+                document.getElementById("secondInput").style.color = "red";
+            }
+        }
+
+        // ввод ответа
+        function answerStep () {
+            var Value = parseInt(document.getElementById("answerInput").value, 10);
+
+            if (Value == Answer) {
+                document.getElementById("answerInput").hidden = true;
+                document.getElementById("answerSum").hidden = false;
+                document.getElementById("answerSum").textContent = document.getElementById("answerInput").value;
+            } else {
+                if (parseInt(document.getElementById("answerInput").value) > 10) {
+                    document.getElementById("answerInput").style.color = "red";
+                } else {
+                    document.getElementById("answerInput").style.color = "black";
+                }
+            }
+        }
+
+        // отрисовка стрелки
+        function parable(C, inputId) {
+            var xx = XConst + (C * 40);
+            var yy = YConst - 20;
+            var Angle = (C * 40) / 4;
+            var x1 = XConst + Angle;
+            var y1 = YConst - (70 + (C * 10));
+            var x2 = xx - Angle;
+            var y2 = y1;
+
+            document.getElementById(inputId).style.left = ((XConst + xx) / 2 ) + 'px';
+            document.getElementById(inputId).style.top = y1 + 0 + 'px';
+
+            context.strokeStyle = "red";
+            context.beginPath();
+            context.moveTo(XConst, YConst - 20);
+
+            context.bezierCurveTo(x1, y1, x2, y2, xx, yy);
+            context.stroke();
+
+            context.beginPath();
+            context.moveTo(xx, yy);
+            context.lineTo(xx - (C * 1.8), yy - (C * 1.4));
+            context.stroke();
+
+            context.beginPath();
+            context.moveTo(xx, yy);
+            context.lineTo(xx - (C * 0.5), yy - (C * 2));
+            context.stroke();
+
+            return xx;
+        }
+    </script>
+</body>
+</html>
