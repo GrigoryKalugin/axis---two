@@ -25,7 +25,7 @@
     </style>
 </head>
 <body>
-    // Объявление инпутов и текстовых полей
+    <!-- Объявление инпутов и текстовых полей -->
     <input id="firstInput"
            class="inputs"
            maxlength="1"
@@ -55,6 +55,12 @@
                 z-index: 1;"
             hidden>
 
+
+    <img id="loadingImg"
+         src="../img/sprite.png"
+         style="position: absolute;
+                z-index: -1;">
+
     <canvas id="myCanvas"
             width="900"
             height="500"
@@ -78,12 +84,13 @@
         var canvas = document.getElementById("myCanvas"),
             context = canvas.getContext("2d");
 
-        // отрисовка изображения
-        var img = new Image();
-        img.src = '../img/sprite.png';
+        // размещние изображения
         imgW = 895;
         imgH = 83;
-        context.drawImage(img, 0, YConst - 40, imgW, imgH);
+        document.getElementById("loadingImg").style.width = imgW + 'px';
+        document.getElementById("loadingImg").style.height = imgH + 'px';
+        document.getElementById("loadingImg").style.top = (YConst - 30) + 'px';
+        document.getElementById("loadingImg").style.left = 8 + 'px';
 
         // размещение элементов выражения
         document.getElementById("firstSum").style.left = (imgW / 2) - 45 + 'px';
